@@ -138,5 +138,10 @@ public class CustomerController {
         }
     }
 
+    public String modifyHeadPic(){
+
+        return null;
+    }
+
 
 }
