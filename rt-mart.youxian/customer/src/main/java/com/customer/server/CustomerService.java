@@ -2,6 +2,7 @@ package com.customer.server;
 
 import com.customer.model.CustomerInf;
 import com.customer.model.CustomerLogin;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -17,5 +18,6 @@ public interface CustomerService {
 
     //修改用户密码（customerLogin）
     String modifyPassword(CustomerLogin customerLogin,String newpwd);
+
 
 }

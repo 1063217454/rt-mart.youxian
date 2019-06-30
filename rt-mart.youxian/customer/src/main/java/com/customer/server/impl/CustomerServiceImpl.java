@@ -6,9 +6,11 @@ import com.customer.repository.CustomerInfRepository;
 import com.customer.repository.CustomerLoginRepository;
 import com.customer.server.CustomerService;
 import com.customer.util.MD5;
+import com.customer.util.OSSClientUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -24,6 +26,10 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     CustomerInfRepository customerInfRepository;
+
+    @Autowired
+    OSSClientUtil clientUtil;
+
 
     @Override
     @Transactional
@@ -125,4 +131,5 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return map;
     }
+
 }

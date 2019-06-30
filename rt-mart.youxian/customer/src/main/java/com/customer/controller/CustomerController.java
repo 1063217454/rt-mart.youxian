@@ -7,15 +7,16 @@ import com.customer.model.CustomerInf;
 import com.customer.model.CustomerLogin;
 import com.customer.server.CustomerService;
 import com.customer.util.CustomerLoginVOUtil;
+import com.customer.util.OSSClientUtil;
 import com.customer.util.ResultVOUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -24,6 +25,10 @@ public class CustomerController {
 
     @Autowired
     CustomerService customerService;
+
+    /*收费，不用
+    @Autowired
+    OSSClientUtil clientUtil;*/
 
     /**
      * 1、用户注册
@@ -138,13 +143,32 @@ public class CustomerController {
         }
     }
 
-    public String modifyHeadPic(){
+    //public String modifyHeadPic(){
+        //////////////////////////////////////
+        //////////////////////////////////////
+   // }
 
-        return null;
-    }
-
-    
-
-
+    /*
+     * 图片上传
+     * 可行，但收费，不用
+     */
+   /* @PostMapping("/imgUpload")
+    public Map<String,Object> imgUpload(@RequestParam("file") MultipartFile file) {
+        Map<String,Object> value = new HashMap<String,Object>();
+        if(file == null || file.getSize()<=0){
+            value.put("success",false);
+            value.put("errorCode",200);
+            value.put("errorMsg","图片上传失败");
+        }else{
+            String name = clientUtil.uploadImg2Oss(file);
+            String imgUrl = clientUtil.getImgUrl(name);
+            System.out.println("imgUrl="+imgUrl);
+            value.put("success",true);
+            value.put("errorCode",0);
+            value.put("errorMsg","");
+            value.put("data",imgUrl);
+        }
+        return value;
+    }*/
 
 }
