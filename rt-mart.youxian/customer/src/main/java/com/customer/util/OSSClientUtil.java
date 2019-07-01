@@ -27,8 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
         // endpoint以杭州为例，其它region请按实际情况填写
         private String endpoint = "oss-cn-hangzhou.aliyuncs.com";
         // accessKey
-        private String accessKeyId = "LTAIjwuOJ05shopu";
-        private String accessKeySecret = "c47DymIoHenPa6XVIWTbJnpr8AcQSW";
+        private String accessKeyId = "LTAI************";
+        private String accessKeySecret = "c47D**************************";
         //空间
         private String bucketName = "fpxxy";//"fpxxy""bcis"
         //文件存储目录
