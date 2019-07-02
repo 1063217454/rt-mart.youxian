@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
-
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,7 +65,7 @@ public class CustomerController {
     }
 
     /**
-     * 用户登录
+     * 用户登录 ( + 往登录日志表写数据)
      * @param phone
      * @param pwd
      * @return
@@ -74,7 +74,7 @@ public class CustomerController {
     @ApiImplicitParams({@ApiImplicitParam(name="phone",value = "用户名(电话号码)",paramType = "path",dataType = "String"),
             @ApiImplicitParam(name="pwd",value = "密码（MD5加密）",paramType = "path",dataType = "String")})
     @PostMapping("/login")
-    public CustomerLoginResultVO<CustomerLoginVO> login(@RequestParam(name = "phone") String phone,@RequestParam(name="pwd") String pwd){
+    public CustomerLoginResultVO<CustomerLoginVO> login(@RequestParam(name = "phone") String phone, @RequestParam(name="pwd") String pwd, HttpServletRequest request){
         CustomerLogin customerLogin = new CustomerLogin();
         customerLogin.setLoginName(phone);
         customerLogin.setPassword(pwd);
@@ -231,6 +231,14 @@ public class CustomerController {
         return value;
     }
 
+    /**
+     * 收货地址列表
+     */
+
+    @GetMapping("/receiveAddressList")
+    public void receiveAddressList(){
+
+    }
 
 
 

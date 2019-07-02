@@ -10,7 +10,7 @@ import java.util.Date;
 
 /**
  * 此类由MySQLToBean工具自动生成
- * 备注(数据表的comment字段)：用户地址表
+ * 备注(数据表的comment字段)：用户地址表(收货地址)
  *
  * @author childlikeman@gmail.com,http://t.qq.com/lostpig
  * @since 2019-06-27 20:41:54

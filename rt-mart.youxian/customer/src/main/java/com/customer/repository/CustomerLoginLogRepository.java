@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface CustomerLoginLogRepository extends JpaRepository<CustomerLoginLog,Integer> {
     List<CustomerLoginLog> findByCustomerId(Integer customerId);
+
 }

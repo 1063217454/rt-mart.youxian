@@ -3,9 +3,12 @@ package com.customer.server.impl;
 import com.customer.VO.CustomerLoginAndInfVO;
 import com.customer.model.CustomerInf;
 import com.customer.model.CustomerLogin;
+import com.customer.model.CustomerLoginLog;
 import com.customer.repository.CustomerInfRepository;
+import com.customer.repository.CustomerLoginLogRepository;
 import com.customer.repository.CustomerLoginRepository;
 import com.customer.server.CustomerService;
+import com.customer.util.JsoupUtil;
 import com.customer.util.MD5;
 import com.customer.util.OSSClientUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +32,13 @@ public class CustomerServiceImpl implements CustomerService {
     CustomerInfRepository customerInfRepository;
 
     @Autowired
-    OSSClientUtil clientUtil;
+    CustomerLoginLogRepository customerLoginLogRepository;
+
+    @Autowired
+    JsoupUtil jsoupUtil;
+
+    /*@Autowired
+    OSSClientUtil clientUtil;*/
 
 
     @Override
@@ -123,6 +132,22 @@ public class CustomerServiceImpl implements CustomerService {
             //2、再判断密码是否正确
             List<CustomerLogin> customerLogins2 = customerLoginRepository.findByLoginNameAndPassword(customerLogin.getLoginName(),newpwd);
             if(customerLogins2 !=null && customerLogins2.size()>0){//登录成功
+                String ip = "";
+                String addr = "";
+                try {
+                     ip = jsoupUtil.getIp();
+                     addr = jsoupUtil.getAdress();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+                CustomerLoginLog customerLoginLog = new CustomerLoginLog();
+                customerLoginLog.setCustomerId(customerLogins2.get(0).getCustomerId());
+                customerLoginLog.setLoginTime(new Date());
+                customerLoginLog.setLoginType(1);//登陆类型：0未成功，1成功
+                customerLoginLog.setLoginIp(ip);
+                customerLoginLog.setLoginIpAddr(addr);
+
+                customerLoginLogRepository.save(customerLoginLog);
                 map.put("0000",customerLogins2.get(0));
             }else{//密码错误，登录失败
                 map.put("0002",null);

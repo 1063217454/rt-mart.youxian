@@ -23,7 +23,8 @@ public class CustomerLoginLog {
     private Integer loginId;//登录日志ID
     private Integer customerId;//登录用户ID
     private Date loginTime;//用户登陆时间
-    private Integer loginIp;//登录IP
-    private boolean loginType;//登陆类型：0未成功，1成功
+    private String loginIp;//登录IP
+    private String loginIpAddr;//登录Ip的地址
+    private Integer loginType;//登陆类型：0未成功，1成功
 
 }
