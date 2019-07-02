@@ -41,7 +41,7 @@ public class FastDFSDemo {
         //4、获取图片Mate信息
        System.out.println("取图片Mate信息");
         try {
-            String message = test.getFileMate("group1/M00/00/00/wKhcA10a5SWADNAUAAA79NrBhTY919.jpg");
+            String message = test.getFileMate("group1/M00/00/00/wKhcA10bDH-AGf_bAAECFLKFqxQ670.jpg");
             System.out.println("message="+message);
             //message= 1、fileExtName:jpg 2、fileLength:15348 3、fileName:test3.jpg
         }catch (Exception e){
