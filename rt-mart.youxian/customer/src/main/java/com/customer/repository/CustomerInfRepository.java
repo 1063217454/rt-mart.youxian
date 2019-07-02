@@ -17,4 +17,9 @@ public interface CustomerInfRepository extends JpaRepository<CustomerInf,Integer
     @Query("update CustomerInf ci set ci.customerName = ?1 where ci.customerId = ?2")
     int updateCustomerNameByCustomerId(String customerName,Integer customerid);
 
+    @Modifying
+    @Transactional
+    @Query("update CustomerInf ci set ci.headPicUrl = ?1 where ci.customerId = ?2")
+    int updateHeadPicUrlByCustomerId(String headPicUrl,Integer customerid);
+
 }

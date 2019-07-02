@@ -19,5 +19,8 @@ public interface CustomerService {
     //修改用户密码（customerLogin）
     String modifyPassword(CustomerLogin customerLogin,String newpwd);
 
+    //修改用户信息表的用户头像URL（customerInf）
+    String modifyHeadPic(CustomerInf customerInf);
+
 
 }

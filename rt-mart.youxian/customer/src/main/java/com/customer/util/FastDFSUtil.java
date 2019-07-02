@@ -2,13 +2,14 @@ package com.customer.util;
 
 import org.csource.fastdfs.*;
 import org.csource.common.NameValuePair;
-import org.springframework.util.Assert;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Component
 public class FastDFSUtil {
 
     /**
@@ -20,7 +21,7 @@ public class FastDFSUtil {
      * @throws IOException
      */
         public String uploadFile(File file,String uploadFileName,long fileLength) throws IOException{
-            System.out.println("上传文件==========");
+            System.out.println("上传文件==========***********");
             String configPath = this.getClass().getResource("/fdfs_client.conf").getFile();
             try{
                 ClientGlobal.init(configPath);

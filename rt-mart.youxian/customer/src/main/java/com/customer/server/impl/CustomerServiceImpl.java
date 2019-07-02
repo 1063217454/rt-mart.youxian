@@ -132,4 +132,9 @@ public class CustomerServiceImpl implements CustomerService {
         return map;
     }
 
+    @Override
+    public String modifyHeadPic(CustomerInf customerInf) {
+        int num = customerInfRepository.updateHeadPicUrlByCustomerId(customerInf.getHeadPicUrl(),customerInf.getCustomerId());
+        return num > 0 ? "0000":"0001";
+    }
 }

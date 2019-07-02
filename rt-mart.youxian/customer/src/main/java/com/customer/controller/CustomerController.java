@@ -7,15 +7,25 @@ import com.customer.model.CustomerInf;
 import com.customer.model.CustomerLogin;
 import com.customer.server.CustomerService;
 import com.customer.util.CustomerLoginVOUtil;
+import com.customer.util.FastDFSUtil;
 import com.customer.util.OSSClientUtil;
 import com.customer.util.ResultVOUtil;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.io.File;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +36,11 @@ public class CustomerController {
     @Autowired
     CustomerService customerService;
 
-    /*收费，不用
+    @Autowired
+    FastDFSUtil fastDFSUtil;
+
+    /*
+    //收费，不用
     @Autowired
     OSSClientUtil clientUtil;*/
 
@@ -143,10 +157,94 @@ public class CustomerController {
         }
     }
 
-    //public String modifyHeadPic(){
-        //////////////////////////////////////
-        //////////////////////////////////////
-   // }
+
+    /**
+     * 上传用户头像
+     * @param customerId
+     * @param file
+     * @return
+     */
+
+    @ApiOperation(value = "用户上传头像",notes = "用户上传头像")
+    @ApiImplicitParams({@ApiImplicitParam(name="customerId",value = "用户id",paramType = "header",dataType = "Integer"),
+                        @ApiImplicitParam(name="file",value = "图片",paramType = "file",dataType = "MultipartFile")})
+    @PostMapping("/modifyHeadPic")
+    public Map<String,Object> modifyHeadPic(@RequestHeader("customerId") Integer customerId,@RequestParam("file") MultipartFile file){
+        Map<String,Object> value = new HashMap<String,Object>();
+        File f = null;
+        File f2 =null;
+        if(file == null || file.getSize()<=0){
+            value.put("headPath","");
+            value.put("nessage","图片上传失败");
+            value.put("status","0001");
+        }else{
+            try {//MultipartFile转file
+                f = File.createTempFile("temp",".jpg");
+                String newPath = f.getAbsolutePath().replace(f.getName(),file.getOriginalFilename());
+                File file3 = new File(newPath);
+                if(file3.exists()){
+                    f2 = file3;
+                    f.deleteOnExit();
+                }else{
+                    boolean a =f.renameTo(new File(newPath));
+                    if(a){
+                        f2 = new File(newPath);
+                    }
+                    file.transferTo(f2);
+                }
+                f2.deleteOnExit();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            String uploadFileName = f2.getName();
+            long fileLength = f2.length();
+            String imgUrl = "";
+            try {
+                 imgUrl = fastDFSUtil.uploadFile(f2,uploadFileName,fileLength);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            String message = "上传成功";
+            if(!"".equals(imgUrl)){//把这个url存到customerInf表
+                CustomerInf customerInf = new CustomerInf();
+                customerInf.setCustomerId(customerId);
+                customerInf.setHeadPicUrl(imgUrl);
+                String code = customerService.modifyHeadPic(customerInf);
+                if("0001".equals(code)){
+                    message = message + ",更新失败";
+                }
+            }
+            System.out.println("imgUrl="+imgUrl);
+            value.put("headPath",imgUrl);
+            value.put("message",message);
+            value.put("status","0000");
+        }
+        return value;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /*
      * 图片上传

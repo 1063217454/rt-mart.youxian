@@ -29,6 +29,7 @@ public class CustomerInf {
     private Integer mobilePhone;//手机号
     private String customerEmail;//邮箱
     private String gender;//性别
+    private String headPicUrl;//用户头像URL
     private int userPoint;//用户积分
     private Date registerTime;//注册时间
     private Date birthday;//会员生日
