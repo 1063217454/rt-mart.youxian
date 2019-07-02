@@ -240,6 +240,38 @@ public class CustomerController {
 
     }
 
+    /**
+     * 新增收货地址
+     */
+    @PostMapping("/addReceiveAddress")
+    public void addReceiveAddress(){
+
+    }
+
+    /**
+     * 设置默认收货地址
+     */
+    @PostMapping("/setDefaultReceiveAddress")
+    public void setDefaultReceiveAddress(){
+
+    }
+
+    /**
+     * 修改收货信息
+     */
+    @PutMapping("/changeReceiveAddress")
+    public void changeReceiveAddress(){
+
+    }
+
+    /**
+     * 查询用户钱包
+     */
+    @GetMapping("/findCustomerWallet")
+    public void findCustomerWallet(){
+
+    }
+
 
 
 
