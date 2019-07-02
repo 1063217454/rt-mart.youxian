@@ -1,5 +1,6 @@
 package com.customer.controller;
 
+import com.customer.VO.CustomerLoginAndInfVO;
 import com.customer.VO.CustomerLoginResultVO;
 import com.customer.VO.CustomerLoginVO;
 import com.customer.VO.ResultVO;
@@ -208,61 +209,29 @@ public class CustomerController {
         return value;
     }
 
-
-
-
-    /*public Map<String,Object> modifyHeadPic(@RequestHeader("customerId") Integer customerId,@RequestParam("file") MultipartFile file){
+    /**
+     * 根据用户ID查询用户信息
+     * @param customerId
+     */
+    @ApiOperation(value = "根据用户ID查询用户信息",notes = "根据用户ID查询用户信息")
+    @ApiImplicitParams(@ApiImplicitParam(name="customerId",value = "用户id",paramType = "header",dataType = "Integer"))
+    @GetMapping("/getCustomerById")
+    public Map<String,Object> getCustomerById(@RequestHeader("customerId") Integer customerId){
         Map<String,Object> value = new HashMap<String,Object>();
-        File f = null;
-        File f2 =null;
-        if(file == null || file.getSize()<=0){
-            value.put("headPath","");
-            value.put("nessage","图片上传失败");
+        CustomerLoginAndInfVO vo = customerService.getCustomerById(customerId);
+        if(vo==null){
+            value.put("result","");
+            value.put("message","查询失败");
             value.put("status","0001");
         }else{
-            try {//MultipartFile转file
-                f = File.createTempFile("temp",".jpg");
-                String newPath = f.getAbsolutePath().replace(f.getName(),file.getOriginalFilename());
-                File file3 = new File(newPath);
-                if(file3.exists()){
-                    f2 = file3;
-                    f.deleteOnExit();
-                }else{
-                    boolean a =f.renameTo(new File(newPath));
-                    if(a){
-                        f2 = new File(newPath);
-                    }
-                    file.transferTo(f2);
-                }
-                f2.deleteOnExit();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            String uploadFileName = f2.getName();
-            long fileLength = f2.length();
-            String imgUrl = "";
-            try {
-                 imgUrl = fastDFSUtil.uploadFile(f2,uploadFileName,fileLength);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            String message = "上传成功";
-            if(!"".equals(imgUrl)){//把这个url存到customerInf表
-                CustomerInf customerInf = new CustomerInf();
-                customerInf.setCustomerId(customerId);
-                customerInf.setHeadPicUrl(imgUrl);
-                String code = customerService.modifyHeadPic(customerInf);
-                if("0001".equals(code)){
-                    message = message + ",更新失败";
-                }
-            }
-            System.out.println("imgUrl="+imgUrl);
-            value.put("headPath",imgUrl);
-            value.put("message",message);
+            value.put("result",vo);
+            value.put("message","查询成功");
             value.put("status","0000");
         }
         return value;
-    }*/
+    }
+
+
 
 
 

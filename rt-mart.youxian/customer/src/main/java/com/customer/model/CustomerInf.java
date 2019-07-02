@@ -26,11 +26,11 @@ public class CustomerInf {
     private String customerName;//用户真实姓名
     private boolean identityCardType;//证件类型：1 身份证，2 军官证，3 护照
     private String identityCardNo;//证件号码
-    private Integer mobilePhone;//手机号
+    private String mobilePhone;//手机号
     private String customerEmail;//邮箱
     private String gender;//性别
     private String headPicUrl;//用户头像URL
-    private int userPoint;//用户积分
+    private Integer userPoint;//用户积分
     private Date registerTime;//注册时间
     private Date birthday;//会员生日
     private Integer customerLevel;//会员级别：1 普通会员，2 青铜，3白银，4黄金，5钻石

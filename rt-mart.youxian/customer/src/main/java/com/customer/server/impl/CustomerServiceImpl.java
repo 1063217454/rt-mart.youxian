@@ -1,5 +1,6 @@
 package com.customer.server.impl;
 
+import com.customer.VO.CustomerLoginAndInfVO;
 import com.customer.model.CustomerInf;
 import com.customer.model.CustomerLogin;
 import com.customer.repository.CustomerInfRepository;
@@ -136,5 +137,32 @@ public class CustomerServiceImpl implements CustomerService {
     public String modifyHeadPic(CustomerInf customerInf) {
         int num = customerInfRepository.updateHeadPicUrlByCustomerId(customerInf.getHeadPicUrl(),customerInf.getCustomerId());
         return num > 0 ? "0000":"0001";
+    }
+
+    @Override
+    public CustomerLoginAndInfVO getCustomerById(Integer customerId) {
+        CustomerLoginAndInfVO vo = new CustomerLoginAndInfVO();
+        List<CustomerInf> customerInfs = customerInfRepository.findByCustomerId(customerId);
+        List<CustomerLogin> customerLogins = customerLoginRepository.findByCustomerId(customerId);
+        if(customerLogins!=null && customerLogins.size()>0 && customerInfs!=null && customerInfs.size()>0) {
+            CustomerLogin customerLogin = customerLogins.get(0);
+            CustomerInf customerInf = customerInfs.get(0);
+            //customerLogin
+            vo.setCustomerId(customerLogin.getCustomerId());
+            vo.setLoginName(customerLogin.getLoginName());
+            vo.setPassword(customerLogin.getPassword());
+            //customerInf
+            vo.setCustomerLevel(customerInf.getCustomerLevel());
+            vo.setCustomerName(customerInf.getCustomerName());
+            vo.setGender(customerInf.getGender());
+            vo.setHeadPicUrl(customerInf.getHeadPicUrl());
+            vo.setMobilePhone(customerInf.getMobilePhone());
+            vo.setRegisterTime(customerInf.getRegisterTime());
+            vo.setUserMoney(customerInf.getUserMoney());
+            vo.setUserPoint(customerInf.getUserPoint());
+            return vo;
+        }else{
+            return null;
+        }
     }
 }

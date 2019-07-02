@@ -1,5 +1,6 @@
 package com.customer.server;
 
+import com.customer.VO.CustomerLoginAndInfVO;
 import com.customer.model.CustomerInf;
 import com.customer.model.CustomerLogin;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,9 @@ public interface CustomerService {
 
     //修改用户信息表的用户头像URL（customerInf）
     String modifyHeadPic(CustomerInf customerInf);
+
+    //根据用户ID查询用户信息
+    CustomerLoginAndInfVO getCustomerById(Integer customerId);
 
 
 }
