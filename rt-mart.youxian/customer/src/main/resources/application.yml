@@ -6,7 +6,10 @@ spring:
     username: root
     password: root
     url: jdbc:mysql://127.0.0.1:3306/members?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=false
-    jpa:
-      show-sql: true
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
 server:
   port: 8080

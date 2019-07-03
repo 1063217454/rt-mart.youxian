@@ -1,9 +1,6 @@
 package com.customer.controller;
 
-import com.customer.VO.CustomerLoginAndInfVO;
-import com.customer.VO.CustomerLoginResultVO;
-import com.customer.VO.CustomerLoginVO;
-import com.customer.VO.ResultVO;
+import com.customer.VO.*;
 import com.customer.model.CustomerInf;
 import com.customer.model.CustomerLogin;
 import com.customer.server.CustomerService;
@@ -21,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -32,8 +30,6 @@ public class CustomerController {
 
     @Autowired
     FastDFSUtil fastDFSUtil;
-    private Integer customerId;
-    private MultipartFile file;
 
     /*
     //收费，不用
@@ -65,7 +61,7 @@ public class CustomerController {
     }
 
     /**
-     * 用户登录 ( + 往登录日志表写数据)
+     * 2、用户登录 ( + 往登录日志表写数据)
      * @param phone
      * @param pwd
      * @return
@@ -103,7 +99,7 @@ public class CustomerController {
     }
 
     /**
-     * 修改用户真实姓名
+     * 3、修改用户真实姓名
      * @param customerId
      * @param customerName
      * @return
@@ -126,7 +122,7 @@ public class CustomerController {
     }
 
     /**
-     * 修改用户密码
+     * 4、修改用户密码
      * @param customerId
      * @param oldPwd
      * @param newPwd
@@ -138,8 +134,8 @@ public class CustomerController {
                         @ApiImplicitParam(name="newPwd",value = "新用户密码",paramType = "path",dataType = "String")})
     @PutMapping("/modifyPassword")
     public ResultVO modifyPassword(@RequestHeader("customerId") Integer customerId,
-                                 @RequestParam(name = "oldPwd") String oldPwd,
-                                 @RequestParam(name = "newPwd") String newPwd){
+                                   @RequestParam(name = "oldPwd") String oldPwd,
+                                   @RequestParam(name = "newPwd") String newPwd){
         CustomerLogin customerLogin = new CustomerLogin();
         customerLogin.setPassword(oldPwd);
         customerLogin.setCustomerId(customerId);
@@ -155,20 +151,17 @@ public class CustomerController {
 
 
     /**
-     * 上传用户头像
+     * 5、上传用户头像
      * @param customerId
      * @param file
      * @return
      */
-
     @ApiOperation(value = "用户上传头像",notes = "用户上传头像")
     @ApiImplicitParams({@ApiImplicitParam(name="customerId",value = "用户id",paramType = "header",dataType = "Integer"),
                         @ApiImplicitParam(name="file",value = "图片",paramType = "file",dataType = "MultipartFile")})
     @PostMapping("/modifyHeadPic")
     public Map<String,Object> modifyHeadPic(@RequestHeader("customerId") Integer customerId,
                                             @RequestParam("file") MultipartFile file){
-        this.customerId = customerId;
-        this.file = file;
         Map<String,Object> value = new HashMap<String,Object>();
         File f = null;
         System.out.println(file.getSize());
@@ -210,7 +203,7 @@ public class CustomerController {
     }
 
     /**
-     * 根据用户ID查询用户信息
+     * 6、根据用户ID查询用户信息
      * @param customerId
      */
     @ApiOperation(value = "根据用户ID查询用户信息",notes = "根据用户ID查询用户信息")
@@ -232,40 +225,113 @@ public class CustomerController {
     }
 
     /**
-     * 收货地址列表
+     * 7、收货地址列表
+     * @param customerId
+     * @return
      */
-
+    @ApiOperation(value = "收货地址列表",notes = "收货地址列表")
+    @ApiImplicitParams({@ApiImplicitParam(name="customerId",value = "用户id",paramType = "header",dataType = "Integer")})
     @GetMapping("/receiveAddressList")
-    public void receiveAddressList(){
-
+    public Map<String,Object> receiveAddressList(@RequestHeader(name="customerId") Integer customerId){
+        Map<String,Object> map = new HashMap<String,Object>();
+        List<CustomerAddrAndInfVO> vos = customerService.receiveAddressList(customerId);
+        if(vos.size()>0){
+            map.put("result",vos);
+            map.put("message","查询成功");
+            map.put("status","0000");
+        }else{
+            map.put("result",vos);
+            map.put("message","查询失败，未创建过收货地址");
+            map.put("status","0001");
+        }
+        return map;
     }
 
     /**
-     * 新增收货地址
+     * 8、新增收货地址
+     * @param customerId
+     * @param customerName
+     * @param mobilePhone
+     * @param address
+     * @param zip
+     * @return
      */
+    @ApiOperation(value = "新增收货地址",notes = "新增收货地址")
+    @ApiImplicitParams({@ApiImplicitParam(name="customerId",value = "用户id",paramType = "header",dataType = "Integer"),
+                        @ApiImplicitParam(name="customerName",value = "用户真实姓名",paramType = "path",dataType = "String"),
+                        @ApiImplicitParam(name="mobilePhone",value = "手机号",paramType = "path",dataType = "String"),
+                        @ApiImplicitParam(name="address",value = "地址",paramType = "path",dataType = "String"),
+                        @ApiImplicitParam(name="zip",value = "邮编",paramType = "path",dataType = "String")})
     @PostMapping("/addReceiveAddress")
-    public void addReceiveAddress(){
+    public Map<String,Object> addReceiveAddress(@RequestHeader(name="customerId") Integer customerId,
+                                                @RequestParam(name = "customerName") String customerName,
+                                                @RequestParam(name = "mobilePhone") String mobilePhone,
+                                                @RequestParam(name = "address") String address,
+                                                @RequestParam(name = "zip") String zip){
+        Map<String,Object> map = new HashMap<String, Object>();
+        String code = customerService.addReceiveAddress(customerId,customerName,mobilePhone,address,zip);
+        if("0000".equals(code)){
+            map.put("message","添加成功");
+            map.put("status",code);
+        }else if("0001".equals(code)){
+            map.put("message","添加失败，收货地址信息异常");
+            map.put("status",code);
+        }else{
+            map.put("message","添加失败，更新Inf表里的真实姓名和手机号码信息异常");
+            map.put("status",code);
+        }
 
+        return map;
     }
 
     /**
-     * 设置默认收货地址
+     * 9、设置默认收货地址
+     * @param customerId
+     * @param customerAddrId
+     * @return
      */
+    @ApiOperation(value = "设置默认收货地址",notes = "设置默认收货地址")
+    @ApiImplicitParams({@ApiImplicitParam(name="customerId",value = "用户id",paramType = "header",dataType = "Integer"),
+                        @ApiImplicitParam(name="customerAddrId",value = "收货地址表ID",paramType = "path",dataType = "Integer")})
     @PostMapping("/setDefaultReceiveAddress")
-    public void setDefaultReceiveAddress(){
-
+    public Map<String,Object> setDefaultReceiveAddress(@RequestHeader(name="customerId") Integer customerId,
+                                                       @RequestParam(name = "customerAddrId") Integer customerAddrId){
+        Map<String,Object> map = new HashMap<String, Object>();
+        String code = customerService.setDefaultReceiveAddress(customerId,customerAddrId);
+        if("0000".equals(code)){
+            map.put("message","设置成功");
+            map.put("status","0000");
+        }else{
+            map.put("message","设置失败");
+            map.put("status","0001");
+        }
+        return map;
     }
 
     /**
-     * 修改收货信息
+     * 10、修改收货信息
      */
     @PutMapping("/changeReceiveAddress")
-    public void changeReceiveAddress(){
-
+    public  Map<String,Object> changeReceiveAddress(@RequestHeader(name="customerId") Integer customerId,
+                                     @RequestParam(name = "customerAddrId") Integer customerAddrId,
+                                     @RequestParam(name = "customerName") String customerName,
+                                     @RequestParam(name = "mobilePhone") String mobilePhone,
+                                     @RequestParam(name = "address") String address,
+                                     @RequestParam(name = "zip") String zip){
+        Map<String,Object> map = new HashMap<String, Object>();
+        String code = customerService.changeReceiveAddress(customerId,customerAddrId,customerName,mobilePhone,address,zip);
+        if("0000".equals(code)){
+            map.put("message","修改成功");
+            map.put("status",code);
+        }else{
+            map.put("message","修改失败");
+            map.put("status",code);
+        }
+        return map;
     }
 
     /**
-     * 查询用户钱包
+     * 11、查询用户钱包
      */
     @GetMapping("/findCustomerWallet")
     public void findCustomerWallet(){

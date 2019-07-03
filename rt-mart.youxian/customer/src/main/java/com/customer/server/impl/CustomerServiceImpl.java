@@ -1,12 +1,9 @@
 package com.customer.server.impl;
 
+import com.customer.VO.CustomerAddrAndInfVO;
 import com.customer.VO.CustomerLoginAndInfVO;
-import com.customer.model.CustomerInf;
-import com.customer.model.CustomerLogin;
-import com.customer.model.CustomerLoginLog;
-import com.customer.repository.CustomerInfRepository;
-import com.customer.repository.CustomerLoginLogRepository;
-import com.customer.repository.CustomerLoginRepository;
+import com.customer.model.*;
+import com.customer.repository.*;
 import com.customer.server.CustomerService;
 import com.customer.util.JsoupUtil;
 import com.customer.util.MD5;
@@ -17,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -33,6 +27,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     CustomerLoginLogRepository customerLoginLogRepository;
+
+    @Autowired
+    AreaRepository areaRepository;
+
+    @Autowired
+    CustomerAddrRepository customerAddrRepository;
 
     @Autowired
     JsoupUtil jsoupUtil;
@@ -188,6 +188,163 @@ public class CustomerServiceImpl implements CustomerService {
             return vo;
         }else{
             return null;
+        }
+    }
+
+    @Override
+    public List<CustomerAddrAndInfVO> receiveAddressList(Integer customerId) {
+        List<CustomerAddrAndInfVO> vos = new ArrayList<CustomerAddrAndInfVO>();
+        List<CustomerInf> customerInfs = customerInfRepository.findByCustomerId(customerId);
+        String customerName = customerInfs.get(0).getCustomerName();
+        String mobilePhone = customerInfs.get(0).getMobilePhone();
+
+        List<CustomerAddr> customerAddrs = customerAddrRepository.findByCustomerId(customerId);
+        if(customerAddrs.size()>0){
+            for(int i=0;i<customerAddrs.size();i++){
+                CustomerAddrAndInfVO vo = new CustomerAddrAndInfVO();
+                CustomerAddr customerAddr = customerAddrs.get(i);
+                String address = areaRepository.findByCode(customerAddr.getProvince()).get(0).getName()+" "+
+                                 areaRepository.findByCode(customerAddr.getCity()).get(0).getName()+" "+
+                                 areaRepository.findByCode(customerAddr.getDistrict()).get(0).getName()+" "+
+                                 areaRepository.findByCode(customerAddr.getStreet()).get(0).getName()+" "+
+                                 customerAddr.getAddress();
+                System.out.println("address="+address);
+                vo.setAddress(address);
+                vo.setZip(customerAddr.getZip());
+                vo.setModifiedTime(customerAddr.getModifiedTime());
+                vo.setIsDefault(customerAddr.getIsDefault());
+                vo.setCustomerId(customerId);
+                vo.setCustomerAddrId(customerAddr.getCustomerAddrId());
+                vo.setCustomerName(customerName);
+                vo.setMobilePhone(mobilePhone);
+                vos.add(vo);
+            }
+        }
+        return vos;
+    }
+
+    @Override
+    public String setDefaultReceiveAddress(Integer customerId, Integer customerAddrId) {
+        int num = customerAddrRepository.updateCustomerAddrByCustomerIdAndAddressId(customerId,customerAddrId);
+        if(num>0){
+            return "0000";
+        }else{
+            return "0001";
+        }
+    }
+
+   @Override
+    public String addReceiveAddress(Integer customerId, String customerName, String mobilePhone, String address, String zip) {
+        String[] aa = address.split(" ");
+        if(aa.length==5){
+           CustomerAddr customerAddr = getCustomerAddr(customerId,address,zip);
+            customerAddrRepository.save(customerAddr);
+            //更新Inf表里的真实姓名和手机号码信息
+            int num =customerInfRepository.updateCustomerNameAndMobilePhoneByCustomerId(customerName,mobilePhone,customerId);
+            if(num>0){
+                return "0000";//添加成功
+            }else{
+                return "0002";//更新Inf表里的真实姓名和手机号码信息异常
+            }
+        }else{
+            return "0001";//收货地址信息异常
+        }
+    }
+
+    public CustomerAddr getCustomerAddr(Integer customerId,String address,String zip){
+        String[] aa = address.split(" ");
+        String shenCode= "";
+        String shiCode= "";
+        String quCode= "";
+        String jiedaoCode= "";
+        //详细地址
+        String addr = aa[4];
+        //获取省的code
+        String shen = aa[0];
+        List<Area> areasShen = areaRepository.findByLevelAndNameLike(1,shen);
+        shenCode = areasShen.get(0).getCode();
+        //获取市的code
+        String shi = aa[1];
+        List<Area> areasShi = areaRepository.findByLevelAndNameLike(2,shi);
+        if(areasShi.size()>=1){
+            for(int i=0;i<areasShi.size();i++){
+                if(shenCode.equals(areasShi.get(i).getParent())){
+                    shiCode = areasShi.get(i).getCode();
+                }
+            }
+        }
+        //areasShi.get(0).getCode();
+        //获取区的code
+        String qu = aa[2];
+        List<Area> areasQu = areaRepository.findByLevelAndNameLike(3,qu);
+        if(areasQu.size()==0){
+            qu = qu.substring(0,qu.length()-1);
+            areasQu = areaRepository.findByLevelAndNameLike(3,qu);
+            if(areasQu.size()>=1){
+                for(int i=0;i<areasQu.size();i++){
+                    if(shiCode.equals(areasQu.get(i).getParent())){
+                        quCode = areasQu.get(i).getCode();
+                    }
+                }
+            }
+        }else if(areasQu.size()>=1){
+            for(int i=0;i<areasQu.size();i++){
+                if(shiCode.equals(areasQu.get(i).getParent())){
+                    quCode = areasQu.get(i).getCode();
+                }
+            }
+        }
+        //获取街道的code
+        String jiedao = aa[3];
+        List<Area> areasJiedao = areaRepository.findByLevelAndNameLike(4,jiedao);
+        if(areasJiedao.size()==0){
+            jiedao = jiedao.substring(0,jiedao.length()-2);
+            areasJiedao = areaRepository.findByLevelAndNameLike(4,jiedao);
+            if(areasJiedao.size()>=1){
+                for(int i=0;i<areasJiedao.size();i++){
+                    if(quCode.equals(areasJiedao.get(i).getParent())){
+                        jiedaoCode = areasJiedao.get(i).getCode();
+                    }
+                }
+            }
+        }else if(areasJiedao.size()>=1){
+            for(int i=0;i<areasJiedao.size();i++){
+                if(quCode.equals(areasJiedao.get(i).getParent())){
+                    jiedaoCode = areasJiedao.get(i).getCode();
+                }
+            }
+        }
+        CustomerAddr customerAddr = new CustomerAddr();
+        customerAddr.setCustomerId(customerId);
+        customerAddr.setAddress(addr);//详细地址
+        customerAddr.setProvince(shenCode);//地区表中省份的ID
+        customerAddr.setCity(shiCode);//地区表中城市的ID
+        customerAddr.setDistrict(quCode);//地区表中的区ID
+        customerAddr.setStreet(jiedaoCode);//地区表中的街道ID
+        customerAddr.setModifiedTime(new Date());
+        customerAddr.setZip(zip);
+        customerAddr.setIsDefault(0);//是否是默认地址
+        return customerAddr;
+    }
+
+    @Override
+    public String changeReceiveAddress(Integer customerId,Integer customerAddrId,String customerName,String mobilePhone,String address,String zip) {
+        String[] aa = address.split(" ");
+        if(aa.length==5) {
+            CustomerAddr customerAddr = getCustomerAddr(customerId, address, zip);
+            customerAddr.setCustomerAddrId(customerAddrId);
+            customerAddrRepository.save(customerAddr);
+            //分析下真实姓名和手机号有没有变
+            CustomerInf inf = customerInfRepository.findByCustomerId(customerId).get(0);
+            if(!customerName.equals(inf.getCustomerName()) || !mobilePhone.equals(inf.getMobilePhone())){
+                inf.setCustomerName(customerName);
+                inf.setMobilePhone(mobilePhone);
+                inf.setModifiedTime(new Date());
+                customerInfRepository.save(inf);
+            }
+            return "0000";
+        }else{
+            return "0001";
         }
     }
 }

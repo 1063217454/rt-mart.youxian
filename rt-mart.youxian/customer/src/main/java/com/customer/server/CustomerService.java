@@ -1,10 +1,12 @@
 package com.customer.server;
 
+import com.customer.VO.CustomerAddrAndInfVO;
 import com.customer.VO.CustomerLoginAndInfVO;
 import com.customer.model.CustomerInf;
 import com.customer.model.CustomerLogin;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CustomerService {
@@ -25,6 +27,18 @@ public interface CustomerService {
 
     //根据用户ID查询用户信息
     CustomerLoginAndInfVO getCustomerById(Integer customerId);
+
+    //新增收货地址
+    String addReceiveAddress(Integer customerId,String customerName,String mobilePhone,String address,String zip);
+
+    //收货地址列表
+    List<CustomerAddrAndInfVO> receiveAddressList(Integer customerId);
+
+    //设置默认收货地址
+    String setDefaultReceiveAddress(Integer customerId,Integer customerAddrId);
+
+    //修改收货信息
+    String changeReceiveAddress(Integer customerId,Integer customerAddrId,String customerName,String mobilePhone,String address,String zip);
 
 
 }
