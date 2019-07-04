@@ -23,9 +23,9 @@ public class CustomerBalanceLog {
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键自增
     private Integer balanceId;//余额日志ID
     private Integer customerId;//用户ID
-    private Integer source;//记录来源：1订单，2退货单
+    private Integer source;//记录来源：1订单，2退货单, 3充值
     private Integer sourceSn;//相关单据ID
     private Date createTime;//记录生成时间
-    private BigDecimal amount;//变动金额
+    private BigDecimal amount;//用户消费金额
 
 }

@@ -40,5 +40,7 @@ public interface CustomerService {
     //修改收货信息
     String changeReceiveAddress(Integer customerId,Integer customerAddrId,String customerName,String mobilePhone,String address,String zip);
 
+    //查询用户钱包
+    Map<String,Object> findCustomerWallet(Integer customerId,Integer page,Integer count);
 
 }

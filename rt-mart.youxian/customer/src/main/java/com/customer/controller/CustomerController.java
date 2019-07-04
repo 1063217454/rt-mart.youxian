@@ -1,6 +1,7 @@
 package com.customer.controller;
 
 import com.customer.VO.*;
+import com.customer.model.CustomerBalanceLog;
 import com.customer.model.CustomerInf;
 import com.customer.model.CustomerLogin;
 import com.customer.server.CustomerService;
@@ -311,6 +312,13 @@ public class CustomerController {
     /**
      * 10、修改收货信息
      */
+    @ApiOperation(value = "修改收货信息",notes = "修改收货信息")
+    @ApiImplicitParams({@ApiImplicitParam(name="customerId",value = "用户id",paramType = "header",dataType = "Integer"),
+                        @ApiImplicitParam(name="customerAddrId",value = "收货地址表ID",paramType = "path",dataType = "Integer"),
+                        @ApiImplicitParam(name="customerName",value = "真实xm",paramType = "path",dataType = "String"),
+                        @ApiImplicitParam(name="mobilePhone",value = "手机号",paramType = "path",dataType = "String"),
+                        @ApiImplicitParam(name="address",value = "收货地址 客户端将地址的省 市 县 详细地址 以空格间隔 拼接成字符串传给后台",paramType = "path",dataType = "String"),
+                        @ApiImplicitParam(name="zip",value = "邮编",paramType = "path",dataType = "String")})
     @PutMapping("/changeReceiveAddress")
     public  Map<String,Object> changeReceiveAddress(@RequestHeader(name="customerId") Integer customerId,
                                      @RequestParam(name = "customerAddrId") Integer customerAddrId,
@@ -332,33 +340,33 @@ public class CustomerController {
 
     /**
      * 11、查询用户钱包
+     * @param customerId
+     * @param page
+     * @param count
+     * @return
      */
+    @ApiOperation(value = "查询用户钱包",notes = "查询用户钱包")
+    @ApiImplicitParams({@ApiImplicitParam(name="customerId",value = "用户id",paramType = "header",dataType = "Integer"),
+                        @ApiImplicitParam(name="page",value = "页数（第几页）",paramType = "path",dataType = "Integer"),
+                        @ApiImplicitParam(name="count",value = "每页的数据条数",paramType = "path",dataType = "Integer")})
     @GetMapping("/findCustomerWallet")
-    public void findCustomerWallet(){
-
+    public  Map<String,Object> findCustomerWallet(@RequestHeader(name="customerId") Integer customerId,
+                                   @RequestParam(name="page") Integer page,
+                                   @RequestParam(name="count") Integer count){
+        Map<String,Object> map1 = new HashMap<String,Object>();
+        Map<String,Object> map = customerService.findCustomerWallet(customerId,page,count);
+        List<CustomerBalanceLog> customerBalanceLogs = (List<CustomerBalanceLog>)map.get("detailList");
+        if(customerBalanceLogs.size()==0){
+            map1.put("result",map);
+            map1.put("message","查询失败");
+            map1.put("status","0001");
+        }else{
+            map1.put("result",map);
+            map1.put("message","查询成功");
+            map1.put("status","0000");
+        }
+        return map1;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

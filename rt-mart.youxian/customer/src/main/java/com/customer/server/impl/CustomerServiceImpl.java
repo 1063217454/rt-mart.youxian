@@ -9,6 +9,9 @@ import com.customer.util.JsoupUtil;
 import com.customer.util.MD5;
 import com.customer.util.OSSClientUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +36,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     CustomerAddrRepository customerAddrRepository;
+
+    @Autowired
+    CustomerBalanceLogRepository customerBalanceLogRepository;
 
     @Autowired
     JsoupUtil jsoupUtil;
@@ -346,5 +352,20 @@ public class CustomerServiceImpl implements CustomerService {
         }else{
             return "0001";
         }
+    }
+
+    @Override
+    public Map<String,Object> findCustomerWallet(Integer customerId, Integer page, Integer count) {
+        Map<String,Object> map = new HashMap<String,Object>();
+        List<CustomerInf> customerInfs = customerInfRepository.findByCustomerId(customerId);
+        BigDecimal userMoney = customerInfs.get(0).getUserMoney();
+        map.put("balance",userMoney);
+        //
+        Pageable pageable = PageRequest.of(page-1,count);//从0开始，所以要-1
+        Page<CustomerBalanceLog> page1 = customerBalanceLogRepository.findCustomerBalanceLogByCustomerIdPageable(customerId,pageable);
+        List<CustomerBalanceLog> customerBalanceLogs = page1.getContent();
+        System.out.println("size="+customerBalanceLogs.size());
+        map.put("detailList",customerBalanceLogs);
+        return map;
     }
 }
