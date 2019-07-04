@@ -21,7 +21,7 @@ public class ProductPicInfo {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键自增
     private Integer productPicId;//商品图片ID
-    private Integer product_id;//商品ID
+    private Integer productId;//商品ID
     private String picDesc;//图片描述
     private String picUrl;//图片URL
     private Integer isMaster;//是否主图：0.非主图1.主图
