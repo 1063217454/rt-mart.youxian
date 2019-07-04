@@ -20,7 +20,7 @@ import java.util.Date;
 public class WarehouseInfo {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键自增
-    private Integer w_id;//仓库ID
+    private Integer wId;//仓库ID
     private char warehouseSn;//仓库编码
     private String warehoustName;//仓库名称
     private String warehousePhone;//仓库电话

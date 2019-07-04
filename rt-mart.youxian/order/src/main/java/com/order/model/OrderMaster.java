@@ -22,9 +22,9 @@ import java.util.Date;
 public class OrderMaster {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键自增
-    private Integer order_id;//订单ID
-    private BigInteger order_sn;//订单编号
-    private Integer customer_id;//下单人ID
+    private Integer orderId;//订单ID
+    private BigInteger orderSn;//订单编号
+    private Integer customerId;//下单人ID
     private String shippingUser;//收货人姓名
     private int province;//省
     private int city;//市
