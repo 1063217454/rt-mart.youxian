@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface BannerInfoRepository extends JpaRepository<BannerInfo,Integer> {
     List<BannerInfo> findByBannerId(Integer bannerId);
+
+    List<BannerInfo> findAll();
 }

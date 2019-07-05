@@ -1,4 +1,4 @@
-package com.customer;
+package com.product;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ public class Swagger2 {
     /**
      * 扫描controller包的路径
      */
-    public static final String BASE_PACKAGE = "com.customer.controller";
+    public static final String BASE_PACKAGE = "com.product.controller";
 
     @Bean
     public Docket createRestApi(){

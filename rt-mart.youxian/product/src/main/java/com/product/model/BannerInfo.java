@@ -16,7 +16,7 @@ public class BannerInfo {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键自增
-    private Integer BannerId;
+    private Integer bannerId;
     //图片Url
     private String imageUrl;
     //跳转页面Url
@@ -27,5 +27,5 @@ public class BannerInfo {
     private String groupCode;
     //组名称
     private String groupName;
-    
+
 }

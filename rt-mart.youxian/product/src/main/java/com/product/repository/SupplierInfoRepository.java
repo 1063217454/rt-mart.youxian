@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface SupplierInfoRepository extends JpaRepository<SupplierInfo,Integer> {
-    List<SupplierInfo> findBySuplierId(Integer suplierId);
+    List<SupplierInfo> findBySupplierId(Integer supplierId);
 }

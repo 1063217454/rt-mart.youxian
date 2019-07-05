@@ -368,7 +368,14 @@ public class CustomerController {
         return map1;
     }
 
-
+    /**
+     * 测试
+     * @return
+     */
+    @RequestMapping("/test")
+    public String Test(){
+        return "hello world";
+    }
 
 
     /*
