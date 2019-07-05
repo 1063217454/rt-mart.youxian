@@ -23,6 +23,7 @@ public class ProductCategory {
     private Integer categoryId;//分类ID
     private String categoryName;//分类名称
     private String categoryCode;//分类编码
+    private Integer parentId;//父分类ID
     private Integer categoryLevel;//分类层级
     private Integer categoryStatus;//分类状态
     private Date modifiedTime;//最后修改时间

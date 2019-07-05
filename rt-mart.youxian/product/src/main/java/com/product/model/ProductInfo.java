@@ -22,12 +22,15 @@ public class ProductInfo {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键自增
     private Integer productId;//主键ID
-    private char productCore;//商品编码
+    private String productCore;//商品编码
     private String productName;//商品名称
     private String barCode;//国条码
-    private Integer oneCategoryId;//一级分类ID
-    private Integer twoCategoryId;//二级分类ID
-    private Integer threeCategoryId;//三级分类ID
+    private String oneCategoryId;//一级分类ID
+    private String twoCategoryId;//二级分类ID
+    private String threeCategoryId;//三级分类ID
+    //fp新增
+    //private Integer
+
     private  Integer supplierId;//商品供应商ID
     private BigDecimal price;//商品销售价格
     private BigDecimal averageCost;//商品加权平均成本

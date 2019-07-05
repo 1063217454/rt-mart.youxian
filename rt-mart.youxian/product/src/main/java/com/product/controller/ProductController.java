@@ -16,6 +16,7 @@ public class ProductController {
 
     /**
      * 1、banner展示列表
+     * 展示广告横幅信息的，暂时放下
      */
     @GetMapping("/bannerShow")
     public void bannerShow(){
