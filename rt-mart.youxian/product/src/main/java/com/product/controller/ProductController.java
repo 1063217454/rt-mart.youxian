@@ -123,13 +123,12 @@ public class ProductController {
     }
 
     /**
-     * 7、我的足迹 notis:暂时无此功能
+     * 7、我的足迹 notis:暂时无此功能,不想搞
      */
     @GetMapping("/browseList")
     public void browseList(@RequestHeader(name = "customerId") Integer customerId,
                            @RequestParam(name = "page") Integer page,
                            @RequestParam(name = "count") Integer count){
-
     }
 
     /**
