@@ -9,4 +9,6 @@ public interface ProductPicInfoRepository extends JpaRepository<ProductPicInfo,I
     List<ProductPicInfo> findByProductPicId(Integer productPicId);
 
     List<ProductPicInfo> findByProductIdAndAndMasterPic(Integer productId,Integer masterPic);
+
+    List<ProductPicInfo> findByProductId(Integer productId);
 }

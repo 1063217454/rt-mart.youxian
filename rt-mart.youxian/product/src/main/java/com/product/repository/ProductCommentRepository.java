@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ProductCommentRepository extends JpaRepository<ProductComment,Integer> {
     List<ProductComment> findByCommentId(Integer commentId);
+
+    List<ProductComment> findByProductId(Integer productId);
 }
