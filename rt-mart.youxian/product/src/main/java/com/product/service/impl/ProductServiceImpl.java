@@ -42,12 +42,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Map<String, Object> commodityList() {
-        Map<String, Object> map = new HashMap<String, Object>();
         Map<String, Object> map1 = new HashMap<String, Object>();
+        Map<String, Object> maps = new HashMap<String, Object>();
 
         List<Commodity> commodities = commodityRepository.findByCategoryLevel(1);
         if(commodities.size()>0){
             for(int i=0;i<commodities.size();i++){
+                Map<String, Object> map = new HashMap<String, Object>();
                 Integer id = commodities.get(i).getCommodityId();
                 String name = commodities.get(i).getCategoryName();
                 Integer commodityId = commodities.get(i).getCommodityId();
@@ -71,15 +72,16 @@ public class ProductServiceImpl implements ProductService {
                         commodityVos.add(commodityVo);
                     }
                 }
-                map.put("data"+i,commodityVos);
+                map.put("commodityList",commodityVos);
                 map.put("id",id);
                 map.put("name",name);
+                maps.put("data"+i,map);
             }
-            map1.put("result",map);
+            map1.put("result",maps);
             map1.put("message","查询成功");
             map1.put("status","0000");
         }else{
-            map1.put("result",map);
+            map1.put("result",maps);
             map1.put("message","查询失败");
             map1.put("status","0001");
         }
