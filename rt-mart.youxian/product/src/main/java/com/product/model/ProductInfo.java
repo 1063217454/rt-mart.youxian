@@ -28,21 +28,22 @@ public class ProductInfo {
     private String oneCategoryId;//一级分类ID
     private String twoCategoryId;//二级分类ID
     private String threeCategoryId;//三级分类ID
-    //fp新增
-    //private Integer
-
     private  Integer supplierId;//商品供应商ID
     private BigDecimal price;//商品销售价格
+    private Integer sales;//销量
     private BigDecimal averageCost;//商品加权平均成本
     private Integer publishStatus;//上下架状态：0下架1上架
     private Integer auditStatus;//审核状态：0未审核，1已审核
-    private float weight;//商品重量
-    private float length;//商品长度
-    private float height;//商品高度
-    private float width;//商品宽度
-    private char colorType;//'红','黄','蓝','黑'
+
+    //这边出现过问题：Can not set char field com.product.model.ProductInfo.colorType to null value
+    //原因是用的是基本数据类型；float char
+    private Float weight;//商品重量
+    private Float length;//商品长度
+    private Float height;//商品高度
+    private Float width;//商品宽度
+    private Character colorType;//'红','黄','蓝','黑'
     private Date productionDate;//生产日期
-    private int shelfLife;//商品有效期
+    private Integer shelfLife;//商品有效期
     private String descript;//商品描述
     private Date indate;//商品录入时间
     private Date modifiedTime;//最后修改时间

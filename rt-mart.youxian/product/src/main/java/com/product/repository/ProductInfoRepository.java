@@ -8,4 +8,6 @@ import java.util.List;
 public interface ProductInfoRepository extends JpaRepository<ProductInfo,Integer> {
 
     List<ProductInfo> findByPublishStatus(Integer publishStatus);
+
+    List<ProductInfo> findByProductId(Integer productId);
 }

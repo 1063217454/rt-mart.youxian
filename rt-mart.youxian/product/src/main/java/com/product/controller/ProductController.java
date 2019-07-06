@@ -52,10 +52,13 @@ public class ProductController {
 
     /**
      * 2、首页商品信息列表
+     * @return
      */
+    @ApiOperation(value = "首页商品信息列表",notes = "首页商品信息列表")
     @GetMapping("/commodityList")
-    public void commodityList(){
-
+    public Map<String,Object> commodityList(){
+        Map<String,Object> map = productService.commodityList();
+        return map;
     }
 
     /**

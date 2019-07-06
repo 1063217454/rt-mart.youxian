@@ -21,8 +21,8 @@ public class SupplierInfo {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键自增
     private Integer supplierId;//供应商ID
-    private char supplierCode;//供应商编码
-    private char supplierName;//供应商名称
+    private Character supplierCode;//供应商编码
+    private Character supplierName;//供应商名称
     private Integer supplierType;//供应商类型：1.自营，2.平台
     private String linkMan;//供应商联系人
     private String phoneNumber;//联系电话

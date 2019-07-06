@@ -2,6 +2,7 @@ package com.product.model;
 
 import lombok.Data;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import java.util.Date;
  * 便于管理首页商品信息列表而建
  */
 @Data
+@Entity
 public class Commodity {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键自增

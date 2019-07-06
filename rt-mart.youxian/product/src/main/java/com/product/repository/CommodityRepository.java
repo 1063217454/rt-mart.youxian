@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface CommodityRepository extends JpaRepository<Commodity,Integer> {
     List<Commodity> findByCategoryLevel(Integer categoryLevel);
+
+    List<Commodity> findByParentId(Integer parentId);
 }

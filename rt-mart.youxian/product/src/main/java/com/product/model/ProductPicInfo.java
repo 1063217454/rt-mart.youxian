@@ -24,7 +24,7 @@ public class ProductPicInfo {
     private Integer productId;//商品ID
     private String picDesc;//图片描述
     private String picUrl;//图片URL
-    private Integer isMaster;//是否主图：0.非主图1.主图
+    private Integer masterPic;//是否主图：0.非主图1.主图
     private Integer picOrder;//图片排序
     private Integer picStatus;//图片是否有效：0无效 1有效
     private Date modifiedTime;//最后修改时间
