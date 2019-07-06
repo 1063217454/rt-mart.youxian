@@ -135,7 +135,9 @@ public class ProductController {
      * 8、商品评论列表
      */
     @GetMapping("/CommodityCommentList")
-    public void CommodityCommentList(){
+    public void CommodityCommentList(@RequestHeader(name = "productId") Integer productId,
+                                     @RequestParam(name = "page") Integer page,
+                                     @RequestParam(name = "count") Integer count){
 
     }
 
