@@ -1,10 +1,13 @@
-package com.customer.util;
+package com.product.util;
 
-import org.csource.fastdfs.*;
 import org.csource.common.NameValuePair;
+import org.csource.fastdfs.*;
 import org.springframework.stereotype.Component;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;

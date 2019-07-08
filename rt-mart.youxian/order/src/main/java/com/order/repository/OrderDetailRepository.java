@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface OrderDetailRepository extends JpaRepository<OrderDetail,Integer> {
     List<OrderDetail> findByOrderDetailId(Integer orderDetailId);
+
+    List<OrderDetail> findByOrderId(Integer orderId);
 }

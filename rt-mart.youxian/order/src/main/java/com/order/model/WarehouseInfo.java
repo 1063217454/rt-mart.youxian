@@ -21,13 +21,13 @@ public class WarehouseInfo {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键自增
     private Integer wId;//仓库ID
-    private char warehouseSn;//仓库编码
+    private Character warehouseSn;//仓库编码
     private String warehoustName;//仓库名称
     private String warehousePhone;//仓库电话
     private String contact;//仓库联系人
-    private int province;//省
-    private int city;//市
-    private int distrct;//区
+    private Integer province;//省
+    private Integer city;//市
+    private Integer distrct;//区
     private String address;//仓库地址
     private Integer warehouseStatus;//仓库状态：0禁用，1启用
     private Date modifiedTime;//最后修改时间

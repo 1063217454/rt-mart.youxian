@@ -24,8 +24,10 @@ public class ProductComment {
     private Integer commentId;//评论ID
     private Integer productId;//商品ID
     private BigInteger orderId;//订单ID
+    private Integer customerId;//用户ID
     private String title;//评论标题
     private String content;//评论内容
+    private String image;//评论图片url
     private Integer auditStatus;//审核状态：0未审核，1已审核
     private Date auditTime;//评论时间
     private Date modifiedTime;//最后修改时间

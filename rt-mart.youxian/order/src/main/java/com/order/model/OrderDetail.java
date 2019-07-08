@@ -28,7 +28,7 @@ public class OrderDetail {
     private Integer productCnt;//购买商品数量
     private BigDecimal productPrice;//购买商品单价
     private BigDecimal averageCost;//平均成本价格
-    private float weight;//商品重量
+    private Float weight;//商品重量
     private BigDecimal feeMoney;//优惠分摊金额
     private Integer wId;//仓库ID
     private Date modifiedTime;//最后修改时间

@@ -23,13 +23,10 @@ public class OrderMaster {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)//主键自增
     private Integer orderId;//订单ID
-    private BigInteger orderSn;//订单编号
+    private String orderSn;//订单编号
     private Integer customerId;//下单人ID
     private String shippingUser;//收货人姓名
-    private int province;//省
-    private int city;//市
-    private int district;//区
-    private String address;//地址
+    private String address;//详细地址
     private Integer paymentMethod;//支付方式：1现金，2余额，3网银，4支付宝，5微信
     private BigDecimal orderMoney;//订单金额
     private BigDecimal districtMoney;//优惠金额

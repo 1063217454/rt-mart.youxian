@@ -6,10 +6,11 @@ import com.product.service.ProductService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,11 +27,7 @@ public class ProductController {
     @Autowired
     ProductService productService;
 
-    /*
-        @ApiOperation(value = "查询用户钱包",notes = "查询用户钱包")
-        @ApiImplicitParams({@ApiImplicitParam(name="customerId",value = "用户id",paramType = "header",dataType = "Integer"),
-                        @ApiImplicitParam(name="page",value = "页数（第几页）",paramType = "path",dataType = "Integer"),
-                        @ApiImplicitParam(name="count",value = "每页的数据条数",paramType = "path",dataType = "Integer")})*/
+
     /**
      * 1、banner展示列表
      * @return
@@ -135,34 +132,42 @@ public class ProductController {
      * 8、商品评论列表
      */
     @GetMapping("/CommodityCommentList")
-    public void CommodityCommentList(@RequestHeader(name = "productId") Integer productId,
-                                     @RequestParam(name = "page") Integer page,
-                                     @RequestParam(name = "count") Integer count){
-
+    public Map<String, Object> CommodityCommentList(@RequestParam(name = "productId") Integer productId,
+                                                    @RequestParam(name = "page") Integer page,
+                                                    @RequestParam(name = "count") Integer count){
+        Map<String, Object> map = productService.CommodityCommentList(productId,page,count);
+        return map;
     }
 
     /**
      * 9、商品评论
      */
     @PostMapping("/addCommodityComment")
-    public void addCommodityComment(){
-
+    public Map<String,Object> addCommodityComment(@RequestHeader(name = "customerId")Integer customerId,
+                                    @RequestParam(name = "productId")Integer productId,
+                                    @RequestParam(name = "orderId") BigInteger orderId,
+                                    @RequestParam(name = "content")String content,
+                                    @RequestParam(name = "file") MultipartFile file){
+        Map<String,Object> map = productService.addCommodityComment(customerId,productId,orderId,content,file);
+        return map;
     }
 
     /**
      * 10、查询一级商品类目
      */
     @GetMapping("/findFirstCategory")
-    public void findFirstCategory(){
-
+    public Map<String,Object> findFirstCategory(){
+        Map<String,Object> map = productService.findFirstCategory();
+        return map;
     }
 
     /**
      * 11、查询二级商品类目
      */
     @GetMapping("/findSecondCategory")
-    public void findSecondCategory(){
-
+    public Map<String,Object> findSecondCategory(@RequestParam(name = "categoryId")Integer categoryId){
+        Map<String,Object> map = productService.findSecondCategory(categoryId);
+        return map;
     }
 
 }
