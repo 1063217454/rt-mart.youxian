@@ -1,6 +1,5 @@
 package com.distribute.customer.controller;
 
-import com.customer.VO.*;
 import com.distribute.customer.VO.*;
 import com.distribute.customer.model.CustomerBalanceLog;
 import com.distribute.customer.model.CustomerInf;
