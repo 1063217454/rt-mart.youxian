@@ -24,9 +24,11 @@ public class OrderCart {
     private Integer cartId;//购物车ID
     private  Integer customerId;//用户ID
     private Integer productId;//商品ID
-    private int productAmount;//加入购物车商品数量
+    private String productName;//商品名称
+    private Integer productAmount;//加入购物车商品数量
     private BigDecimal price;//商品价格
     private Date addTime;//加入购物车时间
+    private String pic;//商品缩略图url
     private Date modifiedTime;//最后修改时间
 
 }

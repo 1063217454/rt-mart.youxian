@@ -1,9 +1,12 @@
 package com.order.service.impl;
 
+import com.order.VO.OrderCartVO;
 import com.order.VO.OrderDetailVO;
 import com.order.VO.OrderMasterVO;
+import com.order.model.OrderCart;
 import com.order.model.OrderDetail;
 import com.order.model.OrderMaster;
+import com.order.repository.OrderCartRepository;
 import com.order.repository.OrderDetailRepository;
 import com.order.repository.OrderMasterRepository;
 import com.order.service.OrderService;
@@ -33,6 +36,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    private OrderCartRepository orderCartRepository;
 
 
     private String getTimeCode(Date date){
@@ -125,7 +131,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Map<String, Object> pay(Integer customerId, String orderSn, Integer payType) {
         Map<String, Object> map = new HashMap<>();
-        int num = orderMasterRepository.updateOrderMasterByorderSn(payType,orderSn);
+        int num = orderMasterRepository.updateOrderMasterByorderSn1(payType,orderSn);
         if(num>0){
             map.put("message","支付成功");
             map.put("status","0000");
@@ -138,8 +144,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Map<String, Object> findOrderListByStatus(Integer customerId, Integer status, Integer page, Integer count) {
-        Map<String, Object> map = new HashMap<>();
-        List<OrderMasterVO> orderMasterVOS = new ArrayList<>();
         //分页查询
         Pageable pageable = PageRequest.of(page - 1, count);//从0开始，所以要-1
         List<OrderMaster> orderMasters = new ArrayList<>();
@@ -150,7 +154,14 @@ public class OrderServiceImpl implements OrderService {
             Page<OrderMaster> page1 = orderMasterRepository.findByCustomerIdAndOrderStatusPageable(customerId,status,pageable);
              orderMasters = page1.getContent();
         }
+        Map<String, Object> map = getMap(orderMasters);
         System.out.println("size=" + orderMasters.size());
+        return map;
+    }
+
+    private Map<String,Object> getMap(List<OrderMaster> orderMasters){
+        Map<String, Object> map = new HashMap<>();
+        List<OrderMasterVO> orderMasterVOS = new ArrayList<>();
         if (orderMasters!=null && orderMasters.size()>0){
             String message = "";
             for (int i=0;i<orderMasters.size();i++){
@@ -224,7 +235,6 @@ public class OrderServiceImpl implements OrderService {
                 map.put("message","查询失败,"+message);
                 map.put("status","0001");
             }
-
         }else{
             map.put("resault",orderMasterVOS);
             map.put("message","查询失败");
@@ -233,6 +243,107 @@ public class OrderServiceImpl implements OrderService {
         return map;
     }
 
+    @Override
+    public Map<String, Object> deleteOrder(Integer customerId, String orderSn) {
+        Map<String, Object> map = new HashMap<>();
+            OrderMaster orderMaster = orderMasterRepository.findByOrderSn(orderSn);
+            if(orderMaster != null){
+                orderDetailRepository.deleteByOrderId(orderMaster.getOrderId());
+                orderMasterRepository.deleteByOrderSn(orderSn);
+                map.put("message","删除成功");
+                map.put("status","0000");
+            }else{
+                map.put("message","删除失败");
+                map.put("status","0000");
+            }
+        return map;
+    }
 
+    @Override
+    public Map<String, Object> confirmReceipt(Integer customerId, String orderSn) {
+        Map<String, Object> map = new HashMap<>();
+        int num = orderMasterRepository.updateOrderMasterByorderSn2(orderSn);
+        if(num>0){
+            map.put("message","收货成功");
+            map.put("status","0000");
+        }else{
+            map.put("message","收货失败");
+            map.put("status","0000");
+        }
+        return map;
+    }
 
+    @Override
+    public Map<String, Object> findShoppingCart(Integer customerId) {
+        Map<String, Object> map = new HashMap<>();
+        List<OrderCartVO> orderCartVOS = new ArrayList<>();
+        List<OrderCart> orderCarts = orderCartRepository.findByCustomerId(customerId);
+        if(orderCarts!=null && orderCarts.size()>0){
+            for(int i=0;i<orderCarts.size();i++){
+                OrderCart oc = orderCarts.get(i);
+                OrderCartVO orderCartVO = new OrderCartVO();
+                orderCartVO.setPic(oc.getPic());
+                orderCartVO.setPrice(oc.getPrice());
+                orderCartVO.setProductAmount(oc.getProductAmount());
+                orderCartVO.setProductId(oc.getProductId());
+                orderCartVO.setProductName(oc.getProductName());
+                orderCartVOS.add(orderCartVO);
+            }
+            map.put("result",orderCartVOS);
+            map.put("message","查询成功");
+            map.put("status","0000");
+        }else {
+            map.put("result",orderCartVOS);
+            map.put("message","查询失败");
+            map.put("status","0001");
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> findOrderInfo(Integer customerId, String orderSn) {
+        List<OrderMaster> orderMasters = new ArrayList<>();
+        OrderMaster orderMaster = orderMasterRepository.findByOrderSn(orderSn);
+        if(orderMaster!=null){
+            orderMasters.add(orderMaster);
+        }
+        Map<String, Object> map = getMap(orderMasters);
+        return map;
+    }
+
+    @Override
+    public Map<String, Object> syncShoppingCart(Integer customerId, String data) {
+        Map<String, Object> map = new HashMap<>();
+        JSONArray array = JSONArray.fromObject(data);
+        if(array.size()>0) {
+            String message = "";
+            for (int i = 0; i < array.size(); i++) {
+                //转
+                JSONObject O = JSONObject.fromObject(array.get(i));
+                Integer productId = Integer.valueOf(O.get("productId").toString());
+                Integer count = Integer.valueOf(O.get("count").toString());
+                OrderCart orderCart = orderCartRepository.findByCustomerIdAndProductId(customerId,productId);
+                if(orderCart!=null){
+                    if(count!=orderCart.getProductAmount()){
+                        orderCart.setProductAmount(count);
+                        orderCartRepository.save(orderCart);
+                    }
+
+                }else{//暂时同步商品的数量，相对购物车多出来的不添加
+                    message += "{productId:"+productId+",count:"+count+"}";
+                }
+            }
+            if("".equals(message)){
+                map.put("message","同步成功");
+                map.put("status","0000");
+            }else{
+                map.put("message","同步失败，"+message);
+                map.put("status","0001");
+            }
+        }else{
+            map.put("message","同步失败，data异常："+data);
+            map.put("status","0002");
+        }
+        return map;
+    }
 }

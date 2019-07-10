@@ -23,8 +23,7 @@ public class OrderController {
                               @RequestParam(name = "totalPrice")BigDecimal totalPrice,
                               @RequestParam(name = "address")String address,
                               @RequestParam("shippingUser")String shippingUser){
-        Map<String,Object> map = orderService.createOrder(customerId,orderinfo,totalPrice,address,shippingUser);
-        return map;
+        return orderService.createOrder(customerId,orderinfo,totalPrice,address,shippingUser);
     }
 
     /**
@@ -35,8 +34,7 @@ public class OrderController {
                                   @RequestParam(name = "orderSn")String orderSn,
                                   @RequestParam(name = "payType")Integer payType){
 
-        Map<String,Object> map = orderService.pay(customerId,orderSn,payType);
-        return map;
+        return orderService.pay(customerId,orderSn,payType);
     }
 
     /**
@@ -48,48 +46,51 @@ public class OrderController {
                                                     @RequestParam(name = "status")Integer status,
                                                     @RequestParam(name = "page")Integer page,
                                                     @RequestParam(name = "count")Integer count){
-        Map<String,Object> map = orderService.findOrderListByStatus(customerId,status,page,count);
-        return map;
+        return orderService.findOrderListByStatus(customerId,status,page,count);
     }
 
     /**
      * 4、删除订单
      */
     @DeleteMapping("/deleteOrder")
-    public void deleteOrder(){
-
+    public Map<String,Object> deleteOrder(@RequestHeader(name = "customerId")Integer customerId,
+                                          @RequestParam(name = "orderSn")String orderSn){
+        return orderService.deleteOrder(customerId,orderSn);
     }
 
     /**
      * 5、收货
      */
     @PutMapping("/confirmReceipt")
-    public void confirmReceipt(){
-
+    public Map<String,Object> confirmReceipt(@RequestHeader(name = "customerId")Integer customerId,
+                                             @RequestParam(name = "orderSn")String orderSn){
+        return orderService.confirmReceipt(customerId,orderSn);
     }
 
     /**
      * 6、查询购物车
      */
     @GetMapping("/findShoppingCart")
-    public void findShoppingCart(){
-
+    public Map<String,Object> findShoppingCart(@RequestHeader(name = "customerId")Integer customerId){
+        return orderService.findShoppingCart(customerId);
     }
 
     /**
      * 7、同步购物车数据
+     * data::[{"productId":5,"count":3},{"productId":6,"count":4}]客户端按照此形式进行封装
      */
     @PutMapping("/syncShoppingCart")
-    public void syncShoppingCart(){
-
+    public Map<String,Object> syncShoppingCart(@RequestHeader(name = "customerId")Integer customerId,
+                                 @RequestParam(name = "data")String data){
+        return orderService.syncShoppingCart(customerId,data);
     }
 
     /**
      * 8、查询订单明细数据
      */
     @GetMapping("/findOrderInfo")
-    public void findOrderInfo(){
-
+    public Map<String,Object> findOrderInfo(@RequestHeader(name = "customerId")Integer customerId,
+                                            @RequestParam(name = "orderSn")String orderSn){
+        return orderService.findOrderInfo(customerId,orderSn);
     }
-
 }

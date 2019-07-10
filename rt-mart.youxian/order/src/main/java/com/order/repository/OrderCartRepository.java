@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface OrderCartRepository extends JpaRepository<OrderCart,Integer> {
     List<OrderCart> findByCartId(Integer cartId);
+
+    List<OrderCart> findByCustomerId(Integer customerId);
+
+    OrderCart findByCustomerIdAndProductId(Integer customerId,Integer productId);
 }
