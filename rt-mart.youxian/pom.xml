@@ -13,6 +13,7 @@
         <module>customer</module>
         <module>product</module>
         <module>order</module>
+        <module>message</module>
     </modules>
     <packaging>pom</packaging>
 
